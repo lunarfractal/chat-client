@@ -69,6 +69,8 @@ class Cursor {
   }
 
   createCursor(reason) {
+    if(debug)
+      console.log('create', reason);
     if(this.id == myId) {
       return;
     }
@@ -87,6 +89,8 @@ class Cursor {
   }
 
   deleteCursor(killReason) {
+    if(debug)
+      console.log("delete", killReason);
     if(killReason == kill_reason_left_game || killReason == kill_reason_closed_ws) {
       this.delete();
       cursors.delete(this.id);
