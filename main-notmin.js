@@ -323,5 +323,5 @@ function init() {
   addListeners();
 }
 
-
-
+window.onload = init;
+window.onresize = resize;
