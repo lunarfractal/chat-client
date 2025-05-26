@@ -199,6 +199,8 @@ class Network {
           cursor.id = id;
           offset = cursor.updateNetwork(view, offset, true);
           cursors.set(id, cursor);
+	  if(debug)
+		  console.log('Cursor create', cursor);
         }
 
         case 0x1: // update
@@ -209,6 +211,8 @@ class Network {
           } else {
             console.log('cursor with id: ' + id + ' not found');
           }
+	  if(debug)
+		  console.log('Cursor update', cursor);
           break;
         }
           
@@ -220,6 +224,8 @@ class Network {
           } else {
             console.log("unknown cursor: " + id + " can't delete it");
           }
+	  if(debug)
+		  console.log('Cursor delete', cursor);
           break;
         }
           
