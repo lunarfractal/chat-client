@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta charset="utf-8">
+	<meta name="title" content="linux">
+	<meta property="og:type" content="website">
+	<link rel="stylesheet" type="text/css" href="css/main-notmin.css">
+	<link id="favicon" rel="icon" type="image/png" href="images/favicon.png">
+	<title>linux</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="main-notmin.js"></script>
+</head>
+<body>
+  <div class="app">
+  </div>
+  <div id="cursor-place"></div>
+  <div id="overlay">
+    <div id="nickInput">
+      <input id="nick" maxlength="15" placeholder="nickname" type="text" onkeydown="if(event.keyCode == 13) document.getElementById('playButton').click()" />
+      <button id="playButton" onclick="clickedPlay(document.getElementById('nick').value)">PLAY</button>
+    </div>
+  </div>
+</body>
+</html>
