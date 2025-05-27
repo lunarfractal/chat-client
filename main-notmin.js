@@ -42,6 +42,7 @@ function loop() {
     cursors.forEach((id, cursor) => {
 	cursor.update();
     });
+    requestAnimationFrame(loop);
 }
 
 function resize() {
@@ -377,6 +378,7 @@ class Network {
 function init() {
   network = new Network();
   network.connect();
+  loop();
   addListeners();
 }
 
