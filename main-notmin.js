@@ -77,7 +77,7 @@ class Cursor {
   constructor(maybeShow) {
     this.element = document.createElement("div");
     this.element.className = "cursor";
-
+    
     this.x = 0;
     this.y = 0;
     this.prevX = 0;
@@ -95,6 +95,12 @@ class Cursor {
     this.img.src = "http://brutal.nekoweb.org/cursor.png";
 
     this.element.appendChild(this.img);
+    
+    this.label = document.createElement('div');
+    this.label.className = 'cursor-label';
+    this.label.innerText = 'Anonymous';
+
+    this.element.appendChild(this.label);
   }
 
   hide() {
@@ -160,7 +166,7 @@ class Cursor {
   }
   
   updateNick(nick) {
-    console.log('nick', nick);
+    this.label.innerText = nick;
   }
 
   updateNetwork(view, offset, isFull) {
