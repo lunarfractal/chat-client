@@ -5,6 +5,20 @@ var cursors = new Map();
 
 var now = Date.now();
 
+function hideUI() {
+  $('#overlay').fadeOut(100);
+}
+
+function fadeInUI() {
+  $('#overlay').fadeIn(300);
+}
+
+function clamp(v, min, max){
+	if(v < min) return min;
+	if(v > max) return max;
+	return v;
+}
+
 var UPDATE_EVERY_N_TICKS = 3;
 var INTERP_TIME = (1000/30)*UPDATE_EVERY_N_TICKS;
 
@@ -15,6 +29,13 @@ var create_reason_existing = 0x02;
 var kill_reason_left_game = 0x01;
 var kill_reason_closed_ws = 0x02;
 var kill_reason_left_room = 0x03;
+
+
+function clickPlay(str) {
+  if(window.network.hasConnection) {
+    window.network.sendNick(str);
+  }
+}
 
 
 function getString(view, offset) {
@@ -299,6 +320,7 @@ class Network {
       case this.OPCODE_ENTERED_GAME:
         window.myId = view.getUint16(1, true);
         console.log('my id:', myId);
+        hideUI();
         break;
       case this.OPCODE_CYCLE_S:
         this.processCursors(view, op);
