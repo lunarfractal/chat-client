@@ -5,6 +5,9 @@ var cursors = new Map();
 
 var now = Date.now();
 
+var UPDATE_EVERY_N_TICKS = 3;
+var INTERP_TIME = (1000/30)*UPDATE_EVERY_N_TICKS;
+
 var create_reason_entered_game = 0x00;
 var create_reason_entered_room = 0x01;
 var create_reason_existing = 0x02;
@@ -39,7 +42,7 @@ function addListeners() {
 
 function loop() {
     now = Date.now();
-    cursors.forEach((id, cursor) => {
+    cursors.forEach((cursor, id) => {
 	cursor.update();
     });
     requestAnimationFrame(loop);
