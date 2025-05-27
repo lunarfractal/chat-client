@@ -104,19 +104,24 @@ class Cursor {
   }
 
   hide() {
-    this.element.style.display = "none";
+    $(this.element).fadeOut(300);
   }
 
   show() {
-    this.element.style.display = "block";
+    $(this.element).fadeIn(300);
   }
 
   create() {
+    this.element.style.display = 'none';
     document.getElementById("cursor-place").appendChild(this.element);
+    $(this.element).fadeIn(300);
   }
 
   delete() {
-    document.getElementById("cursor-place").removeChild(this.element);
+    $(this.element).fadeOut(300);
+    setTimeout(() => {
+      document.getElementById("cursor-place").removeChild(this.element);
+    }, 300);
   }
 
   update() {
