@@ -3,6 +3,8 @@ var network;
 var myId;
 var cursors = new Map();
 
+var isSecure = window.location.protocol == 'https:';
+
 var now = Date.now();
 
 function hideUI() {
@@ -210,7 +212,7 @@ class Network {
   constructor() {
     this.webSocket = null;
 
-    this.address = "ws://192.168.1.12:8081";
+    this.address = isSecure ? "wss://192.168.1.12:9091" : "ws://192.168.1.12:8081";
     this.hasConnection = false;
     this.sentHello = false;
     this.lastPing = 0;
