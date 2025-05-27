@@ -3,6 +3,8 @@ var network;
 var myId;
 var cursors = new Map();
 
+var now = Date.now();
+
 var create_reason_entered_game = 0x00;
 var create_reason_entered_room = 0x01;
 var create_reason_existing = 0x02;
@@ -35,6 +37,13 @@ function addListeners() {
   });
 }
 
+function loop() {
+    now = Date.now();
+    cursors.forEach((id, cursor) => {
+	cursor.update();
+    });
+}
+
 function resize() {
   network.sendResize();
 }
@@ -43,6 +52,17 @@ class Cursor {
   constructor(maybeShow) {
     this.element = document.createElement("div");
     this.element.className = "cursor";
+
+    this.x = 0;
+    this.y = 0;
+    this.prevX = 0;
+    this.prevY = 0;
+    this.origX = 0;
+    this.origY = 0;
+    this.dstX = 0;
+    this.dstY = 0;
+
+    this.lastUpdateTime = 0;
 
     this.id = 0;
     
@@ -68,6 +88,17 @@ class Cursor {
     document.getElementById("cursor-place").removeChild(this.element);
   }
 
+  update() {
+    this.prevX = this.x;
+    this.prevY = this.y;
+    
+    var t = clamp((now - this.lastUpdateTime) / INTERP_TIME, 0.0, 1.0);
+    var newPosX = t * (this.dstX - this.origX) + this.origX;
+    var newPosY = t * (this.dstY - this.origY) + this.origY;
+	  
+    this.updateCursor(newPosX, newPosY);
+  }
+	
   createCursor(reason) {
     if(debug)
       console.log('create', reason);
@@ -84,7 +115,8 @@ class Cursor {
   }
 
   updateCursor(x, y) {
-    console.log(x, y);
+    this.x = x;
+    this.y = y;
     this.element.style.marginLeft = x + "px";
     this.element.style.marginTop = y + "px";
   }
@@ -111,14 +143,23 @@ class Cursor {
     offset += 2;
     let y = (view.getUint16(offset, true) / 65535) * window.innerHeight;
     offset += 2;
+	  
     if(isFull) {
       let res = getString(view, offset);
       offset = res.offset;
       let createReason = view.getUint8(offset++);
       this.createCursor(createReason);
       this.updateNick(res.nick);
+      this.updateCursor(x, y);
     }
-    this.updateCursor(x, y);
+	  
+    this.origX = this.x;
+    this.origY = this.y;
+	  
+    this.dstX = x;
+    this.dstY = y;
+
+    this.lastUpdateTime = now;
     return offset;
   }
 
