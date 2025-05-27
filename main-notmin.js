@@ -13,20 +13,20 @@ var kill_reason_left_room = 0x03;
 
 
 function getString(view, offset) {
-	var nick = "";
-	for(;;){
-		var v = view.getUint16(offset, true);
-		offset += 2;
-		if(v == 0) {
-			break;
-		}
+  var nick = "";
+  for(;;){
+    var v = view.getUint16(offset, true);
+    offset += 2;
+    if(v == 0) {
+	break;
+    }
 
-		nick += String.fromCharCode(v);
-	}
-	return {
-		nick: nick,
-		offset: offset
-	};
+    nick += String.fromCharCode(v);
+  }
+  return {
+    nick: nick,
+    offset: offset
+  };
 }
 
 function addListeners() {
@@ -84,6 +84,7 @@ class Cursor {
   }
 
   updateCursor(x, y) {
+    console.log(x, y);
     this.element.style.marginLeft = x + "px";
     this.element.style.marginTop = y + "px";
   }
@@ -99,6 +100,10 @@ class Cursor {
       this.hide();
     }
     else console.log('unknown kill reason', killReason);
+  }
+  
+  updateNick(nick) {
+    console.log('nick', nick);
   }
 
   updateNetwork(view, offset, isFull) {
@@ -128,7 +133,7 @@ class Network {
   constructor() {
     this.webSocket = null;
 
-    this.address = "ws://localhost:8081";
+    this.address = "ws://192.168.1.12:8081";
     this.hasConnection = false;
     this.sentHello = false;
     this.lastPing = 0;
@@ -205,6 +210,7 @@ class Network {
           cursors.set(id, cursor);
 	  if(debug)
 		  console.log('Cursor create', cursor);
+          break;
         }
 
         case 0x1: // update
@@ -305,7 +311,7 @@ class Network {
   }
 
   sendNick(nick) {
-    let buffer = new ArrayBuffer(1);
+    let buffer = new ArrayBuffer(1 + 2 * nick.length + 3);
     let view = new DataView(buffer);
 
     view.setUint8(0, this.OPCODE_ENTER_GAME);
