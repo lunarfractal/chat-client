@@ -458,7 +458,7 @@ class Network {
 
     view.setUint8(0, this.OPCODE_CHAT);
 	
-    for(let i = 0, l = value.length; i < l, i++) {
+    for(let i = 0, l = value.length; i < l; i++) {
       view.setUint16(1 + i * 2, value.charCodeAt(i), true);
     }
 
