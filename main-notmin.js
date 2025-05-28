@@ -4,6 +4,9 @@ var myId;
 var cursors = new Map();
 
 var isSecure = window.location.protocol == 'https:';
+var href = window.location.href;
+
+var url = new URL(href);
 
 var now = Date.now();
 
@@ -225,11 +228,26 @@ class Network {
     this.OPCODE_LEAVE_GAME = 0x04;
     this.OPCODE_RESIZE = 0x05;
     this.OPCODE_CURSOR = 0x06;
+    this.OPCODE_CD = 0x07;
+    this.OPCODE_LS = 0x08;
+    this.OPCODE_CHAT = 0x09;	  
 
     // Server -> Client
     this.OPCODE_PONG = 0x00;
     this.OPCODE_ENTERED_GAME = 0xA0;
     this.OPCODE_CYCLE_S = 0xA4;
+    this.OPCODE_EVENTS = 0xA1;	  
+  }
+
+  getServerAndConnect() {
+    let url = new URL(location.href);
+    let id = url.searchParams.get('id');
+  
+    if (id) {
+      this.address = `${this.address}/?id=${id}`;
+    }
+
+    this.connect();
   }
 
   connect() {
@@ -271,6 +289,24 @@ class Network {
     this.ping();
     this.sendHello();
   }
+
+  processEvents(view) {
+    let offset = 1;
+    let type = view.getUint8(offset++);
+    switch(type) {
+      case 0x1:
+      {
+	let id = view.getUint16(offset, true);
+	offset += 2;
+	let res = getString(view, offset);
+	let message = res.nick;
+	console.log('message from: ' + id + ' and message: ' + message);
+        break;
+      }
+
+      default:
+	break;	    
+  }	  
 
   processCursors(view) {
     let offset = 1;
@@ -338,6 +374,9 @@ class Network {
       case this.OPCODE_CYCLE_S:
         this.processCursors(view, op);
         break;
+      case this.OPCODE_EVENTS:
+        this.processEvents(view);
+        break;		    
       default:
         console.log('unknown op:', op);
         break;
@@ -410,6 +449,19 @@ class Network {
     view.setUint8(0, this.OPCODE_LEAVE_GAME);
 
     this.webSocket.send(buffer)
+  }
+
+  sendChat(value) {
+    let buffer = new ArrayBuffer(1 + 2 * value.length + 3);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_CHAT);
+	
+    for(let i = 0, l = value.length; i < l, i++) {
+      view.setUint16(1 + i * 2, value.charCodeAt(i), true);
+    }
+
+    this.webSocket.send(buffer);
   }
 }
 
