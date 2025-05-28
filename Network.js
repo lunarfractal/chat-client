@@ -183,6 +183,7 @@ window.Network = class Network {
         console.log("Pong", +new Date() - this.lastPing);
         break;
       case this.OPCODE_ENTERED_GAME:
+        window.isInGame = true;
         window.myId = view.getUint16(1, true);
         console.log("my id:", window.myId);
         window.hideUI();
