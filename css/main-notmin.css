@@ -95,14 +95,13 @@ body {
   text-shadow: 0px 0px 3px rgba(122, 162, 247, 0.4);
   box-shadow: 0 0 4px rgba(122, 162, 247, 0.3);
 
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border-color: #7aa2f7;
+  box-shadow: 0 0 6px rgba(122, 162, 247, 0.6),
+    0 0 10px rgba(122, 162, 247, 0.4);
 }
 
 .input-nick:focus {
   outline: none;
-  border-color: #7aa2f7;
-  box-shadow: 0 0 6px rgba(122, 162, 247, 0.6),
-    0 0 10px rgba(122, 162, 247, 0.4);
 }
 
 #playButton {
@@ -110,28 +109,28 @@ body {
   padding: 0 16px;
   font-size: 16px;
   font-family: "Arial", sans-serif;
-  border: 2px solid #3b4261;
+  border: 2px solid #3d496f;
   border-radius: 6px;
   opacity: 1;
   height: 36px;
   line-height: 36px;
   background-color: #1f2335;
-  color: #7aa2f7;
+  color: #3d496f;
   font-weight: bold;
 
-  text-shadow: 0 0 4px rgba(122, 162, 247, 0.4);
   box-shadow: 0 0 4px rgba(122, 162, 247, 0.2);
+  color: #7aa2f7;
+  text-shadow: 0 0 3px rgba(122, 162, 247, 0.7),
+    0 0 10px rgba(122, 162, 247, 0.5);
+  border-color: #7aa2f7;
+  box-shadow: 0 0 6px rgba(122, 162, 247, 0.6),
+    0 0 10px rgba(122, 162, 247, 0.4);
 
   cursor: pointer;
 }
 
 #playButton:hover,
 #playButton:focus {
-  text-shadow: 0 0 6px rgba(122, 162, 247, 0.7),
-    0 0 10px rgba(122, 162, 247, 0.5);
-  border-color: #7aa2f7;
-  box-shadow: 0 0 6px rgba(122, 162, 247, 0.6),
-    0 0 10px rgba(122, 162, 247, 0.4);
   outline: none;
 }
 
