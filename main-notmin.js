@@ -464,6 +464,19 @@ class Network {
 
     this.webSocket.send(buffer);
   }
+
+  changeRoom(value) {
+    let buffer = new ArrayBuffer(1 + value.length + 3);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_CD);
+	
+    for(let i = 0, l = value.length; i < l; i++) {
+      view.setUint8(1 + i, value.charCodeAt(i));
+    }
+
+    this.webSocket.send(buffer);
+  }	
 }
 
 function init() {
