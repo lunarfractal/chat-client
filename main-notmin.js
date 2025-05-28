@@ -15,6 +15,8 @@ window.cursors = new Map();
 window.network;
 window.app;
 
+function loadScript(url){var head = document.getElementsByTagName('head')[0];var script = document.createElement('script');script.type = 'text/javascript';script.src = url;head.appendChild(script);}
+
 function init() {
   window.app = new window.App();
   window.network = new window.Network();
@@ -25,3 +27,8 @@ function init() {
 
 window.onload = init;
 window.onresize = window.app.resize;
+
+loadScript("Utils.js");
+loadScript("App.js");
+loadScript("Network.js");
+loadScript("Cursor.js");
