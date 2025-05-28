@@ -25,7 +25,7 @@ function clamp(v, min, max){
 }
 
 var UPDATE_EVERY_N_TICKS = 3;
-var INTERP_TIME = (1000/30)*UPDATE_EVERY_N_TICKS;
+var INTERP_TIME = (1000/60)*UPDATE_EVERY_N_TICKS;
 
 var create_reason_entered_game = 0x00;
 var create_reason_entered_room = 0x01;
