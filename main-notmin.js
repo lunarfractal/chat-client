@@ -1,0 +1,27 @@
+window.isSecure = window.location.protocol == "https:";
+window.href = window.location.href;
+window.url = new URL(window.href);
+
+window.debug = true;
+window.now = Date.now();
+window.UPDATE_EVERY_N_TICKS = 3;
+window.INTERP_TIME = (1000 / 30) * window.UPDATE_EVERY_N_TICKS;
+
+window.myId;
+window.myX = 0;
+window.myY = 0;
+window.isInGame;
+window.cursors = new Map();
+window.network;
+window.app;
+
+function init() {
+  window.app = new window.App();
+  window.network = new window.Network();
+  window.network.connect();
+  window.app.loop();
+  window.app.addListeners();
+}
+
+window.onload = init;
+window.onresize = window.app.resize;
