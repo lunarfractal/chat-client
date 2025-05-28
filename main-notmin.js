@@ -305,7 +305,8 @@ class Network {
       }
 
       default:
-	break;	    
+	break;
+    }
   }	  
 
   processCursors(view) {
