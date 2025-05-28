@@ -60,6 +60,23 @@ function getString(view, offset) {
     };
 }
 
+function getLobbyName(view, offset) {
+    var nick = "";
+    for (;;) {
+        var v = view.getUint8(offset, true);
+        offset += 1;
+        if (v == 0) {
+            break;
+        }
+
+        nick += String.fromCharCode(v);
+    }
+    return {
+        nick: nick,
+        offset: offset
+    };
+}
+
 function addListeners() {
     document.addEventListener("mousemove", (e) => {
         if (network.hasConnection) network.sendCursor(e.clientX, e.clientY);
@@ -235,6 +252,7 @@ class Network {
         this.OPCODE_CYCLE_S = 0xA4;
         this.OPCODE_EVENTS = 0xA1;
 	this.OPCODE_HISTORY = 0xB1;
+	this.OPCODE_CONFIG = 0xB2;
     }
 
     getServerAndConnect() {
@@ -305,6 +323,16 @@ class Network {
             default:
                 break;
         }
+    }
+
+    processConfig(view) {
+	let offset = 1, byteLength = view.byteLength;
+	while(offset != byteLength) {
+            let res = getLobbyName(view, offset);
+	    let name = res.nick;
+            offset = res.offset;
+	    console.log('lobby: ' + name);
+	}
     }
 
     processHistory(view) {
@@ -387,6 +415,7 @@ class Network {
                 window.myId = view.getUint16(1, true);
                 console.log('my id:', myId);
                 hideUI();
+		this.list();
 		this.getHistory();
                 break;
             case this.OPCODE_CYCLE_S:
@@ -397,6 +426,9 @@ class Network {
                 break;
 	    case this.OPCODE_HISTORY:
 		this.processHistory(view);
+		break;
+	    case this.OPCODE_CONFIG:
+		this.processConfig(view);
 		break;
             default:
                 console.log('unknown op:', op);
@@ -496,6 +528,15 @@ class Network {
         }
 
         this.webSocket.send(buffer);
+    }
+
+    list() {
+        let buffer = new ArrayBuffer(1);
+	let view = new DataView(buffer);
+
+	view.setUint8(0, this.OPCODE_LS);
+
+	this.webSocket.send(buffer);
     }
 
     getHistory() {
