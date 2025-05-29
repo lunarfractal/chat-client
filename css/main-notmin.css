@@ -1,5 +1,5 @@
 html {
-  background: #01060c; /* blackish blue */
+  background: #404040;
 }
 
 body {
@@ -51,7 +51,7 @@ body {
 
 .cursor {
   position: absolute;
-  width: 8px;
+  width: 9px;
   pointer-events: none;
   z-index: 1000;
   display: flex;
@@ -61,7 +61,7 @@ body {
 }
 
 .cursor img {
-  width: 8px;
+  width: 9px;
   height: auto;
   display: block;
 }
@@ -74,14 +74,12 @@ body {
   font-size: 10px;
   padding: 2px 5px;
   line-height: 1.2;
-  color: #000;
-  background: #fff;
+  color: #ffffff;
+  background: #000000;
   border-radius: 3px;
   white-space: nowrap;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 }
-
-
 
 .input-nick {
   width: 55%;
