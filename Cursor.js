@@ -107,6 +107,11 @@ window.Cursor = class Cursor {
     this.label.innerText = nick;
   }
 
+  updateColor(r, g, b) {
+    this.label.style.color = "rgb(" + r + ", " + g + ", " + b + ")";
+    this.label.style.textShadow = "0px 0px 4px rgb(" + r + ", " + g + ", " + b + ")";
+  }
+
   updateNetwork(view, offset, isFull) {
     let x = (view.getUint16(offset, true) / 65535) * window.innerWidth;
     offset += 2;
