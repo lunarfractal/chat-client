@@ -60,8 +60,7 @@ window.Cursor = class Cursor {
     this.prevX = this.x;
     this.prevY = this.y;
 
-    var rawT = (window.now - this.lastUpdateTime) / window.INTERP_TIME;
-    var t = window.clamp(easeOutQuad(rawT), 0.0, 1.0);
+    var t = window.easeOutQuad(window.clamp((window.now - this.lastUpdateTime) / window.INTERP_TIME, 0.0, 1.0)); 
 
     var newPosX = t * (this.dstX - this.origX) + this.origX;
     var newPosY = t * (this.dstY - this.origY) + this.origY;
@@ -70,7 +69,7 @@ window.Cursor = class Cursor {
   }
 
   createCursor(reason) {
-    if (window.debug) console.log("create", reason);
+    //if (window.debug) console.log("create", reason);
     if (this.id == window.myId) {
       return;
     }
@@ -92,7 +91,7 @@ window.Cursor = class Cursor {
   }
 
   deleteCursor(killReason) {
-    if (window.debug) console.log("delete", killReason);
+    //if (window.debug) console.log("delete", killReason);
     if (
       killReason == this.FLAG_LEFT_GAME ||
       killReason == this.FLAG_CLOSED_WS
