@@ -1,7 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
 
 const server = http.createServer(async (req, res) => {
   const publicFolderPath = path.join(__dirname, 'public');
