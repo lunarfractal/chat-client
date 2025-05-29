@@ -19,7 +19,7 @@
   <div id="overlay">
     <div id="nickInput">
       <input id="nick" class="input-nick" maxlength="15" placeholder="nickname" type="text" onkeydown="if(event.keyCode == 13) document.getElementById('playButton').click()" />
-      <button id="playButton" onclick="clickPlay(document.getElementById('nick').value)">PLAY</button>
+      <button id="playButton" onclick="window.app.clickPlay(document.getElementById('nick').value)">PLAY</button>
     </div>
   </div>
 </body>
