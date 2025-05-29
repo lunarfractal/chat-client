@@ -109,7 +109,6 @@ window.Cursor = class Cursor {
 
   updateColor(r, g, b) {
     this.label.style.color = "rgb(" + r + ", " + g + ", " + b + ")";
-    this.label.style.textShadow = "0px 0px 1px rgb(" + r + ", " + g + ", " + b + ")";
   }
 
   updateNetwork(view, offset, isFull) {
