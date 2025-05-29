@@ -107,8 +107,8 @@ window.Cursor = class Cursor {
     this.label.innerText = nick;
   }
 
-  updateColor(r, g, b) {
-    this.label.style.color = "rgb(" + r + ", " + g + ", " + b + ")";
+  updateColor(hue) {
+    this.label.style.color = "hsl(" + hue + ", 100%, 50%)";
   }
 
   updateNetwork(view, offset, isFull) {
@@ -118,11 +118,14 @@ window.Cursor = class Cursor {
     offset += 2;
 
     if (isFull) {
+      let hue = view.getUInt16(offset, true);
+      offset += 2;
       let res = window.getString(view, offset);
       offset = res.offset;
       let createReason = view.getUint8(offset++);
       this.createCursor(createReason);
       this.updateNick(res.nick);
+      this.updateColor(hue);
       this.updateCursor(x, y);
     }
 
