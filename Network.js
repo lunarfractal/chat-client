@@ -143,7 +143,6 @@ window.Network = class Network {
           cursor.id = id;
           offset = cursor.updateNetwork(view, offset, true);
           window.cursors.set(id, cursor);
-          if (window.debug) console.log("Cursor create", cursor);
           break;
         }
 
@@ -154,7 +153,6 @@ window.Network = class Network {
           } else {
             console.log("cursor with id: " + id + " not found");
           }
-          if (window.debug) console.log("Cursor update", cursor);
           break;
         }
 
@@ -165,7 +163,6 @@ window.Network = class Network {
           } else {
             console.log("unknown cursor: " + id + " can't delete it");
           }
-          if (window.debug) console.log("Cursor delete", cursor);
           break;
         }
 
