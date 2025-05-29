@@ -60,7 +60,9 @@ window.Cursor = class Cursor {
     this.prevX = this.x;
     this.prevY = this.y;
 
-    var t = window.clamp((window.now - this.lastUpdateTime) / window.INTERP_TIME, 0.0, 1.0);
+    var rawT = (window.now - this.lastUpdateTime) / window.INTERP_TIME;
+    var t = window.clamp(easeOutQuad(rawT), 0.0, 1.0);
+
     var newPosX = t * (this.dstX - this.origX) + this.origX;
     var newPosY = t * (this.dstY - this.origY) + this.origY;
 
