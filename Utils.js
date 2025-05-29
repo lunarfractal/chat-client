@@ -4,6 +4,21 @@ function clamp(v, min, max) {
   return v;
 }
 
+function easeOutQuad(t) {
+  return t * (2 - t);
+}
+
+function easeInOutCubic(t) {
+  return t < 0.5
+    ? 4 * t * t * t
+    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function easeOutSine(t) {
+  return Math.sin((t * Math.PI) / 2);
+}
+
+
 function hideUI() {
   $("#overlay").fadeOut(100);
 }
