@@ -5,6 +5,7 @@ function leftGame() {
   });
 
   window.fadeInUI();
+  window.isInGame = false;
 }
 
 window.Network = class Network {
