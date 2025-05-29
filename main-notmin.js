@@ -23,12 +23,13 @@ function init() {
   window.network.connect();
   window.app.loop();
   window.app.addListeners();
+  
+  window.onresize = window.app.resize;
 }
-
-window.onload = init;
-window.onresize = window.app.resize;
 
 loadScript("Utils.js");
 loadScript("App.js");
 loadScript("Network.js");
 loadScript("Cursor.js");
+
+window.onload = init;
