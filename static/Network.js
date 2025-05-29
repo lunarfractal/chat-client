@@ -286,7 +286,7 @@ window.Network = class Network {
 
     this.webSocket.send(buffer);
 
-    leftGame();
+    setTimeout(leftGame, 300);
   }
 
   sendChat(value) {
