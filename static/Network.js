@@ -1,3 +1,12 @@
+function leftGame() {
+  window.cursors.forEach((cursor, id) => {
+    cursor.delete();
+    cursors.delete(id);
+  });
+
+  window.fadeInUI();
+}
+
 window.Network = class Network {
   constructor() {
     this.webSocket = null;
@@ -67,6 +76,7 @@ window.Network = class Network {
     console.log("disconnected");
     window.network.hasConnection = false;
     setTimeout(() => window.network.connect(), 1e3);
+    leftGame();
   }
 
   onError(a) {
@@ -271,6 +281,8 @@ window.Network = class Network {
     view.setUint8(0, this.OPCODE_LEAVE_GAME);
 
     this.webSocket.send(buffer);
+
+    leftGame();
   }
 
   sendChat(value) {
