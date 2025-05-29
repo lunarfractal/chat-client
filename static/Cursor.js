@@ -7,14 +7,6 @@ window.Cursor = class Cursor {
 
     this.lastUpdateTime = 0;
 
-    // Flags
-    this.FLAG_ENTERED_GAME = 0x00;
-    this.FLAG_ENTERED_ROOM = 0x01;
-    this.FLAG_DOES_EXIST = 0x02;
-    this.FLAG_LEFT_GAME = 0x03;
-    this.FLAG_CLOSED_WS = 0x02;
-    this.FLAG_LEFT_ROOM = 0x01;
-
     // DOM
     this.element = document.createElement("div");
     this.element.className = "cursor";
@@ -64,20 +56,9 @@ window.Cursor = class Cursor {
     this.updateCursor(newPosX, newPosY);
   }
 
-  createCursor(reason) {
+  createCursor() {
     if (this.id === window.myId) return;
-
-    switch (reason) {
-      case this.FLAG_ENTERED_GAME:
-      case this.FLAG_DOES_EXIST:
-        this.create();
-        break;
-      case this.FLAG_ENTERED_ROOM:
-        this.show();
-        break;
-      default:
-        console.log("Unknown create reason", reason);
-    }
+    this.create();
   }
 
   updateCursor(x, y) {
@@ -87,19 +68,9 @@ window.Cursor = class Cursor {
     this.element.style.marginTop = `${y}px`;
   }
 
-  deleteCursor(killReason) {
-    switch (killReason) {
-      case this.FLAG_LEFT_GAME:
-      case this.FLAG_CLOSED_WS:
-        this.delete();
-        window.cursors.delete(this.id);
-        break;
-      case this.FLAG_LEFT_ROOM:
-        this.hide();
-        break;
-      default:
-        console.log("Unknown kill reason", killReason);
-    }
+  deleteCursor() {
+    this.delete();
+    window.cursors.delete(this.id);
   }
 
   updateNick(nick) {
@@ -124,8 +95,7 @@ window.Cursor = class Cursor {
       const res = window.getString(view, offset);
       offset = res.offset;
 
-      const createReason = view.getUint8(offset++);
-      this.createCursor(createReason);
+      this.createCursor();
       this.updateNick(res.nick);
       this.updateColor(hue);
       this.updateCursor(x, y);
@@ -141,8 +111,7 @@ window.Cursor = class Cursor {
   }
 
   deleteNetwork(view, offset) {
-    const killReason = view.getUint8(offset++);
-    this.deleteCursor(killReason);
+    this.deleteCursor();
     return offset;
   }
 };
