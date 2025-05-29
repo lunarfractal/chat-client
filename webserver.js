@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer(async (req, res) => {
-  const publicFolderPath = path.join(__dirname, 'public');
+  const publicFolderPath = path.join(__dirname, 'static');
 
   if (req.url === '/' || req.url === '/index' || req.url === '/index.html') {
     serveStaticFile(res, path.join(publicFolderPath, 'index.html'));
