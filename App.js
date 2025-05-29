@@ -14,7 +14,11 @@ window.App = class App {
     window.cursors.forEach((cursor, id) => {
       cursor.update();
     });
-    window.requestAnimationFrame(this.loop);
+    window.requestAnimationFrame(window.app.loop);
+  }
+  
+  resize() {
+    if(window.network.hasConnection) window.network.sendResize();
   }
   
   sendCursor() {
