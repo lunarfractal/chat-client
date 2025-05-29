@@ -251,16 +251,14 @@ window.Network = class Network {
     this.webSocket.send(buffer);
   }
 
-  sendNick(nick, hue) {
+  sendNick(nick) {
     let buffer = new ArrayBuffer(1 + 2 * nick.length + 3);
     let view = new DataView(buffer);
 
     view.setUint8(0, this.OPCODE_ENTER_GAME);
 
-    view.setUint16(1, hue, true);
-
     for (let i = 0; i < nick.length; i++) {
-      view.setUint16(3 + i * 2, nick.charCodeAt(i), true);
+      view.setUint16(1 + i * 2, nick.charCodeAt(i), true);
     }
 
     this.webSocket.send(buffer);
