@@ -38,7 +38,9 @@ window.App = class App {
 
   sendMessage() {
     if(window.network.hasConnection && window.isInGame) {
-      window.network.sendChat(document.getElementById('chat').value);
+      let input = document.getElementById('chat');
+      window.network.sendChat(input.value);
+      input.value = "";
     }
   }
 }
