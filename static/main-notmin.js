@@ -25,7 +25,8 @@ function init() {
   window.network.connect();
   window.app.loop();
   window.app.addListeners();
-  
+
+  fadeInUI();
   window.onresize = window.app.resize;
 }
 
