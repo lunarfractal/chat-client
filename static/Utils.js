@@ -8,6 +8,11 @@ function easeOutQuad(t) {
   return t * (2 - t);
 }
 
+function getPlayerName(nick) {
+  if(nick) return nick;
+  else return "Anonymous";
+}
+
 function easeInOutCubic(t) {
   return t < 0.5
     ? 4 * t * t * t
