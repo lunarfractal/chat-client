@@ -140,6 +140,7 @@ window.Network = class Network {
       res = window.getString(view, offset);
       let content = res.nick;
       offset = res.offset;
+      console.log(content);
       window.chatbox.addMessage(nick, content);
     }
   }
