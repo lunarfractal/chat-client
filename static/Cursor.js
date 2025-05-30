@@ -6,6 +6,7 @@ window.Cursor = class Cursor {
     this.origX = this.origY = this.dstX = this.dstY = 0;
 
     this.nick = "Anonymous";
+    this.hue = 240;
     
     this.lastUpdateTime = 0;
 
@@ -81,6 +82,7 @@ window.Cursor = class Cursor {
   }
 
   updateColor(hue) {
+    this.hue = hue;
     this.label.style.color = `hsl(${hue}, 100%, 50%)`;
   }
 
