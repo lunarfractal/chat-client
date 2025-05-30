@@ -24,14 +24,14 @@
       <div id="chatbox">
       </div>
       <div id="chatInput">
-        <textarea
+        <input
           id="chat"
           class="chat-input"
           placeholder="type here.."
           type="text"
           maxlength="200"
           onkeydown="if(event.keyCode == 13 && !event.shiftKey) window.app.sendMessage()"
-        ></textarea>
+        />
       </div>
     </div>
     <div id="overlay">
