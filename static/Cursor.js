@@ -5,6 +5,8 @@ window.Cursor = class Cursor {
     this.x = this.y = this.prevX = this.prevY = 0;
     this.origX = this.origY = this.dstX = this.dstY = 0;
 
+    this.nick = "";
+    
     this.lastUpdateTime = 0;
 
     // DOM
@@ -74,6 +76,7 @@ window.Cursor = class Cursor {
   }
 
   updateNick(nick) {
+    this.nick = nick;
     this.label.innerText = nick;
   }
 
