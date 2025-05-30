@@ -26,7 +26,7 @@ function serveStaticFile(res, filePath) {
       res.end('Error al leer el archivo local');
     } else {
       const contentType = getContentType(filePath);
-      res.writeHead(200, { 'Content-Type': contentType });
+      res.writeHead(200, { 'Content-Type': contentType, 'Access-Control-Allow-Origin': '*' });
       res.end(data);
     }
   });
