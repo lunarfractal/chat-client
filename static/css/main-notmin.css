@@ -67,7 +67,7 @@ body {
 }
 
 .cursor-label {
-  font-family: 'Terminus', monospace;
+  font-family: 'VT323', monospace;
   position: absolute;
   top: 100%;
   left: 100%;
