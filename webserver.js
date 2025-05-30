@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const url = require('url');
 
 const server = http.createServer(async (req, res) => {
   const publicFolderPath = path.join(__dirname, 'static');
@@ -8,7 +9,7 @@ const server = http.createServer(async (req, res) => {
   if (req.url === '/' || req.url === '/index' || req.url === '/index.html') {
     serveStaticFile(res, path.join(publicFolderPath, 'index.html'));
   } else {
-    const filePath = path.join(publicFolderPath, req.url);
+    const filePath = path.join(publicFolderPath, url.parse(req.url).pathname);
     fs.access(filePath, fs.constants.F_OK, (err) => {
       if (err) {
         console.error(err);
