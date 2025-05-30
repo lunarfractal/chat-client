@@ -1,3 +1,32 @@
+@font-face {
+  font-family: 'Terminus';
+  src: url('/fonts/terminus/TerminusTTF-4.49.3.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Terminus';
+  src: url('/fonts/terminus/TerminusTTF-Bold-4.49.3.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Terminus';
+  src: url('/fonts/terminus/TerminusTTF-Italic-4.49.3.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Terminus';
+  src: url('/fonts/terminus/TerminusTTF-Bold-Italic-4.49.3.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+
 html {
   background: #404040;
 }
@@ -67,6 +96,7 @@ body {
 }
 
 .cursor-label {
+  font-family: 'Terminus', monospace;
   position: absolute;
   top: 100%;
   left: 100%;
