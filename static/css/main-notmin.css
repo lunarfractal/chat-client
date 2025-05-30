@@ -1,27 +1,27 @@
 @font-face {
   font-family: 'Terminus';
-  src: url('fonts/terminus/terminus-normal.woff') format('woff');
+  src: url('/fonts/terminus/terminus-normal.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Terminus';
-  src: url('fonts/terminus/terminus-bold.woff') format('woff');
+  src: url('/fonts/terminus/terminus-bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Terminus';
-  src: url('fonts/terminus/terminus-italic.woff') format('woff');
+  src: url('/fonts/terminus/terminus-italic.woff') format('woff');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'Terminus';
-  src: url('fonts/terminus/terminus-bold-italic.woff') format('woff');
+  src: url('/fonts/terminus/terminus-bold-italic.woff') format('woff');
   font-weight: bold;
   font-style: italic;
 }
