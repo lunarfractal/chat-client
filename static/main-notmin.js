@@ -14,11 +14,13 @@ window.isInGame;
 window.cursors = new Map();
 window.network;
 window.app;
+window.chatbox;
 
 function loadScript(url){var head = document.getElementsByTagName('head')[0];var script = document.createElement('script');script.type = 'text/javascript';script.src = url;head.appendChild(script);}
 
 function init() {
   window.app = new window.App();
+  window.chatbox = new window.ChatBox();
   window.network = new window.Network();
   window.network.connect();
   window.app.loop();
