@@ -134,6 +134,8 @@ window.Network = class Network {
     while (offset != byteLength) {
       let id = view.getUint16(offset, true);
       offset += 2;
+      let hue = view.getUint16(offset, true);
+      offset += 2;
       let timestamp = view.getFloat64(offset, true);
       offset += 8;
       let res = window.getString(view, offset);
@@ -142,8 +144,7 @@ window.Network = class Network {
       res = window.getString(view, offset);
       let content = res.nick;
       offset = res.offset;
-      let color = window.cursors.get(id)?.hue || 240;
-      window.chatbox.addMessage(nick, color, content);
+      window.chatbox.addMessage(nick, hue, content);
     }
   }
 
