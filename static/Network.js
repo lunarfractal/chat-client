@@ -200,6 +200,8 @@ window.Network = class Network {
         window.isInGame = true;
         window.myId = view.getUint16(1, true);
         console.log("my id:", window.myId);
+        window.myHue = view.getUint16(3, true);
+        console.log("my hue", window.myHue);
         window.hideUI();
         this.list();
         this.getHistory();
