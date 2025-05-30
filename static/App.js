@@ -35,4 +35,10 @@ window.App = class App {
       window.myY = e.clientY;
     });
   }
+
+  sendMessage() {
+    if(window.network.hasConnection && window.isInGame) {
+      window.network.sendChat(document.getElementById('chat').value);
+    }
+  }
 }
