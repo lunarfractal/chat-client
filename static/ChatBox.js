@@ -17,5 +17,6 @@ window.ChatBox = class ChatBox {
     messageBox.appendChild(nickDisplay);
     messageBox.appendChild(messageDisplay);
     this.element.appendChild(messageBox);
+    this.element.scrollTop = this.element.scrollHeight;
   }
 }
