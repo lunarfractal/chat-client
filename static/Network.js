@@ -107,6 +107,7 @@ window.Network = class Network {
         let message = res0.nick;
         offset = res0.offset;
         let color = window.cursors.get(id)?.hue || 240;
+        if(id == window.myId) color = myHue;
         window.chatbox.addMessage(nick, color, message);
         break;
       }
