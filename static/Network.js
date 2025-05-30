@@ -102,7 +102,9 @@ window.Network = class Network {
         offset += 2;
         let res = window.getString(view, offset);
         let message = res.nick;
-        console.log("message from: " + id + " and message: " + message);
+        let cursor = window.cursors.get(id);
+        let nick = cursor.nick;
+        window.chatbox.addMessage(nick, message);
         break;
       }
 
@@ -136,7 +138,7 @@ window.Network = class Network {
       res = window.getString(view, offset);
       let content = res.nick;
       offset = res.offset;
-      console.log(nick + ": " + content);
+      window.chatbox.addMessage(nick, content);
     }
   }
 
