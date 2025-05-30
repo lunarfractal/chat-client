@@ -5,7 +5,7 @@ window.ChatBox = class ChatBox {
 
   addMessage(nick, value) {
     let messageBox = document.createElement('div');
-    messageBox.className  'message-box';
+    messageBox.className = 'message-box';
     let nickDisplay = document.createElement('span');
     nickDisplay.className = 'nick-display');
     nickDisplay.innerText = `${nick}: `;
