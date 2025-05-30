@@ -30,7 +30,7 @@
           placeholder="type here.."
           type="text"
           maxlength="200"
-          onkeydown="if(event.keyCode == 13 && !e.shiftKey()) window.app.sendMessage()"
+          onkeydown="if(event.keyCode == 13 && !event.shiftKey) window.app.sendMessage()"
         ></textarea>
       </div>
     </div>
