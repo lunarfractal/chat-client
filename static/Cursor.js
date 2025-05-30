@@ -5,7 +5,7 @@ window.Cursor = class Cursor {
     this.x = this.y = this.prevX = this.prevY = 0;
     this.origX = this.origY = this.dstX = this.dstY = 0;
 
-    this.nick = "";
+    this.nick = "Anonymous";
     
     this.lastUpdateTime = 0;
 
@@ -76,7 +76,7 @@ window.Cursor = class Cursor {
   }
 
   updateNick(nick) {
-    this.nick = nick;
+    this.nick = window.getPlayerName(nick);
     this.label.innerText = nick;
   }
 
