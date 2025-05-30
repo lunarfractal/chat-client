@@ -169,6 +169,7 @@ textarea:focus {
   width: calc(100% - 50px);
   display: flex;
   flex-direction: row;
+  gap: 2px;
   margin-bottom: 2px;
 }
 
