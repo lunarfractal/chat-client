@@ -25,10 +25,12 @@ function easeOutSine(t) {
 
 
 function hideUI() {
-  $("#overlay").fadeOut(100);
+  $("#overlay").fadeOut(300);
+  $(".chat-container").fadeIn(300);
 }
 
 function fadeInUI() {
+  $(".chat-container").fadeOut(300);
   $("#overlay").fadeIn(300);
 }
 
