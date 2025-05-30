@@ -106,7 +106,8 @@ window.Network = class Network {
         let res0 = window.getString(view, offset);
         let message = res0.nick;
         offset = res0.offset;
-        window.chatbox.addMessage(nick, message);
+        let color = window.cursors.get(id)?.hue || 240;
+        window.chatbox.addMessage(nick, color, message);
         break;
       }
 
@@ -140,8 +141,8 @@ window.Network = class Network {
       res = window.getString(view, offset);
       let content = res.nick;
       offset = res.offset;
-      console.log(content);
-      window.chatbox.addMessage(nick, content);
+      let color = window.cursors.get(id)?.hue || 240;
+      window.chatbox.addMessage(nick, color, content);
     }
   }
 
