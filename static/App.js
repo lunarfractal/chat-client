@@ -41,6 +41,7 @@ window.App = class App {
       let input = document.getElementById('chat');
       window.network.sendChat(input.value);
       input.value = "";
+      window.chatbox.element.scrollTop = window.chatbox.element.scrollHeight;
     }
   }
 }
