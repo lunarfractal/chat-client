@@ -101,9 +101,11 @@ window.Network = class Network {
         let id = view.getUint16(offset, true);
         offset += 2;
         let res = window.getString(view, offset);
+        let nick = res.nick;
+        offset = res.offset;
+        let res = window.getString(view, offset);
         let message = res.nick;
-        let cursor = window.cursors.get(id);
-        let nick = cursor.nick;
+        offset = res.offset;
         window.chatbox.addMessage(nick, message);
         break;
       }
