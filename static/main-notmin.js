@@ -34,5 +34,6 @@ loadScript("Utils.js");
 loadScript("App.js");
 loadScript("Network.js");
 loadScript("Cursor.js");
+loadScript("ChatBox.js");
 
 window.onload = init;
