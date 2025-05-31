@@ -5,6 +5,8 @@ window.Cursor = class Cursor {
     this.x = this.y = this.prevX = this.prevY = 0;
     this.origX = this.origY = this.dstX = this.dstY = 0;
 
+    this.bot = false;
+    
     this.nick = "Anonymous";
     this.hue = 240;
     
@@ -22,6 +24,11 @@ window.Cursor = class Cursor {
     this.label.className = "cursor-label";
     this.label.innerText = "Anonymous";
     this.element.appendChild(this.label);
+
+    if(maybeShow) {
+      this.bot = true;
+      this.label.innerText = '<span style="color: #0bdfff; margin-right: 3px">BOT</span>' + this.nick;
+    }
   }
 
   hide() {
@@ -78,7 +85,11 @@ window.Cursor = class Cursor {
 
   updateNick(nick) {
     this.nick = window.getPlayerName(nick);
-    this.label.innerText = nick;
+    if(this.bot) {
+      this.label.innerText = '<span style="color: #0bdfff; margin-right: 4px">BOT</span>' + this.nick;
+    } else {
+      this.label.innerText = this.nick;
+    }
   }
 
   updateColor(hue) {
@@ -87,17 +98,17 @@ window.Cursor = class Cursor {
   }
 
   updateNetwork(view, offset, isFull) {
-    const x = (view.getUint16(offset, true) / 65535) * window.innerWidth;
+    let x = (view.getUint16(offset, true) / 65535) * window.innerWidth;
     offset += 2;
 
-    const y = (view.getUint16(offset, true) / 65535) * window.innerHeight;
+    let y = (view.getUint16(offset, true) / 65535) * window.innerHeight;
     offset += 2;
 
     if (isFull) {
-      const hue = view.getUint16(offset, true);
+      let hue = view.getUint16(offset, true);
       offset += 2;
 
-      const res = window.getString(view, offset);
+      let res = window.getString(view, offset);
       offset = res.offset;
 
       this.createCursor();
