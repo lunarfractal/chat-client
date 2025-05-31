@@ -119,13 +119,15 @@ window.Network = class Network {
 
   processConfig(view) {
     let offset = 1,
-      byteLength = view.byteLength;
+      byteLength = view.byteLength,
+      lobbies = [];
     while (offset != byteLength) {
       let res = window.getLobbyName(view, offset);
       let name = res.nick;
       offset = res.offset;
-      console.log("lobby: " + name);
+      lobbies.push(name);
     }
+    window.chatbox.addMessage('System', 120, 'Lobbies: ' + lobbies.join(', '));
   }
 
   processHistory(view) {
@@ -213,7 +215,6 @@ window.Network = class Network {
         window.myHue = view.getUint16(3, true);
         console.log("my hue", window.myHue);
         window.hideUI();
-        this.list();
         this.getHistory();
         break;
       case this.OPCODE_CYCLE_S:
