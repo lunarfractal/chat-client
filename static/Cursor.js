@@ -27,7 +27,7 @@ window.Cursor = class Cursor {
 
     if(maybeShow) {
       this.bot = true;
-      this.label.innerHTML = '<span style="color: #0bdfff; margin-right: 3px">BOT</span>' + this.nick;
+      this.label.innerHTML = '<span style="color: #0bdfff;margin-right: 3px">[BOT]</span>' + this.nick;
     }
   }
 
@@ -86,7 +86,7 @@ window.Cursor = class Cursor {
   updateNick(nick) {
     this.nick = window.getPlayerName(nick);
     if(this.bot) {
-      this.label.innerHTML = '<span style="color: #0bdfff; margin-right: 4px">BOT</span>' + this.nick;
+      this.label.innerHTML = '<span style="color: #0bdfff;margin-right: 3px">[BOT]</span>' + this.nick;
     } else {
       this.label.innerText = this.nick;
     }
