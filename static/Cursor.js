@@ -15,7 +15,7 @@ window.Cursor = class Cursor {
     this.element.className = "cursor";
 
     this.img = document.createElement("img");
-    this.img.src = window.isSecure ? "https://brutal.nekoweb.org/cursor.png" : "http://brutal.nekoweb.org/cursor.png";
+    this.img.src = "images/cursor.png";
     this.element.appendChild(this.img);
 
     this.label = document.createElement("div");
