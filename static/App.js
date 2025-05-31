@@ -51,7 +51,7 @@ window.App = class App {
   sendMessage() {
     if(window.network.hasConnection && window.isInGame) {
       let input = document.getElementById('chat');
-      let value = inout.value;
+      let value = input.value;
       if(value.startsWith('/')) {
         let command = value.substring(1);
         switch(command) {
