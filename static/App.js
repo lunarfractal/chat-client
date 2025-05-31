@@ -46,6 +46,9 @@ window.App = class App {
   changeRoom(id) {
     window.chatbox.element.innerHTML = "";
     network.changeRoom(id);
+    setTimeout(() => {
+      network.requestHistory();
+    }, 1000);
   }
 
   sendMessage() {
