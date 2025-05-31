@@ -54,12 +54,14 @@ body {
 }
 
 .cursor img {
+  z-index: 1000;
   width: 9px;
   height: auto;
   display: block;
 }
 
 .cursor-label {
+  z-index: 1000;
   font-family: 'VT323', monospace;
   letter-spacing: 0.5px;
   position: absolute;
