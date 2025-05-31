@@ -6,6 +6,9 @@ window.App = class App {
   clickPlay(str) {
     if (window.network.hasConnection) {
       window.network.sendNick(str);
+      setTimeout(() => {
+        window.chatbox.addMessage('System', 120, 'Type /room <room_name> to change your room/create one if not exists');
+      }, 3000);
     }
   }
   
@@ -39,9 +42,21 @@ window.App = class App {
   sendMessage() {
     if(window.network.hasConnection && window.isInGame) {
       let input = document.getElementById('chat');
-      window.network.sendChat(input.value);
-      input.value = "";
-      window.chatbox.element.scrollTop = window.chatbox.element.scrollHeight;
+      let value = inout.value;
+      if(value.startsWith('/')) {
+        let command = value.substring(1);
+        switch(command) {
+          case 'room':
+            let roomId = value.split(' ')[1];
+            network.changeRoom(roomId);
+            break;
+          default: break;
+        }
+      } else {
+        window.network.sendChat(value);
+        input.value = "";
+        window.chatbox.element.scrollTop = window.chatbox.element.scrollHeight;
+      }
     }
   }
 }
