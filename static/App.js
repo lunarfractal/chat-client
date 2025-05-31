@@ -66,9 +66,9 @@ window.App = class App {
         }
       } else {
         window.network.sendChat(value);
-        input.value = "";
-        window.chatbox.element.scrollTop = window.chatbox.element.scrollHeight;
       }
+      input.value = "";
+      window.chatbox.element.scrollTop = window.chatbox.element.scrollHeight;
     }
   }
 }
