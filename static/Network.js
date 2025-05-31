@@ -12,9 +12,7 @@ window.Network = class Network {
   constructor() {
     this.webSocket = null;
 
-    this.address = window.isSecure
-      ? "wss://192.168.1.12:9091"
-      : "ws://192.168.1.12:8081";
+    this.address = "wss://gateway-101-0.glitch.me";
     this.hasConnection = false;
     this.sentHello = false;
     this.lastPing = 0;
@@ -42,13 +40,6 @@ window.Network = class Network {
   }
 
   getServerAndConnect() {
-    let url = new URL(location.href);
-    let id = url.searchParams.get("id");
-
-    if (id) {
-      this.address = `${this.address}/?id=${id}`;
-    }
-
     this.connect();
   }
 
