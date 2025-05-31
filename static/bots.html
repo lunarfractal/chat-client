@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta charset="utf-8" />
+    <meta name="title" content="linux" />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" type="text/css" href="css/main-notmin.css" />
+    <link id="favicon" rel="icon" type="image/png" href="images/favicon.png" />
+    <title>linux</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+window.App = class App {
+  constructor() {
+    setInterval(this.sendCursor, 1000/30);
+  }
+
+  clickPlay(str) {
+    if (window.network.hasConnection) {
+      window.network.sendNick(str);
+    }
+  }
+  
+  loop() {
+    window.now = Date.now();
+    window.cursors.forEach((cursor, id) => {
+      cursor.update();
+    });
+    window.requestAnimationFrame(window.app.loop);
+  }
+  
+  resize() {
+    if(window.network.hasConnection) window.network.sendResize();
+  }
+  
+  sendCursor() {
+    if(!window.isInGame)
+      return;
+    
+    if (window.network.hasConnection)
+      window.network.sendCursor(window.myX, window.myY);
+  }
+  
+  addListeners() {
+    document.addEventListener("mousemove", (e) => {
+      window.myX = e.clientX;
+      window.myY = e.clientY;
+    });
+  }
+
+  sendMessage() {
+    if(window.network.hasConnection && window.isInGame) {
+      let input = document.getElementById('chat');
+      window.network.sendChat(input.value);
+      input.value = "";
+      window.chatbox.element.scrollTop = window.chatbox.element.scrollHeight;
+    }
+  }
+}
+
+      window.ChatBox = class ChatBox {
+  constructor() {
+    this.element = document.getElementById('chatbox');
+  }
+
+  addMessage(nick, color, value) {
+    let messageBox = document.createElement('div');
+    messageBox.className = 'message-box';
+    let nickDisplay = document.createElement('span');
+    nickDisplay.className = 'nick-display';
+    nickDisplay.innerText = `${getPlayerName(nick)}: `;
+    nickDisplay.style.color = "hsl("+color+", 100%, 50%)";
+    nickDisplay.style.textShadow = "0px 0px 4px hsla("+color+", 100%, 50%, 0.7)";
+    let messageDisplay = document.createElement('span');
+    messageDisplay.className = 'message-content';
+    messageDisplay.innerText = value;
+    messageBox.appendChild(nickDisplay);
+    messageBox.appendChild(messageDisplay);
+    this.element.appendChild(messageBox);
+    this.element.scrollTop = this.element.scrollHeight;
+  }
+}
+
+      window.Cursor = class Cursor {
+  constructor(maybeShow) {
+    this.id = 0;
+
+    this.x = this.y = this.prevX = this.prevY = 0;
+    this.origX = this.origY = this.dstX = this.dstY = 0;
+
+    this.bot = false;
+    
+    this.nick = "Anonymous";
+    this.hue = 240;
+    
+    this.lastUpdateTime = 0;
+
+    // DOM
+    this.element = document.createElement("div");
+    this.element.className = "cursor";
+
+    this.img = document.createElement("img");
+    this.img.src = "images/cursor.png";
+    this.element.appendChild(this.img);
+
+    this.label = document.createElement("div");
+    this.label.className = "cursor-label";
+    this.label.innerText = "Anonymous";
+    this.element.appendChild(this.label);
+
+    if(maybeShow) {
+      this.bot = true;
+      this.label.innerHTML = '<span style="color: #0bdfff;margin-right: 3px">[BOT]</span>' + this.nick;
+    }
+  }
+
+  hide() {
+    $(this.element).fadeOut(300);
+  }
+
+  show() {
+    $(this.element).fadeIn(300);
+  }
+
+  create() {
+    this.element.style.display = "none";
+    document.getElementById("cursor-place").appendChild(this.element);
+    $(this.element).fadeIn(300);
+  }
+
+  delete() {
+    $(this.element).fadeOut(300);
+    setTimeout(() => {
+      document.getElementById("cursor-place").removeChild(this.element);
+    }, 300);
+  }
+
+  update() {
+    this.prevX = this.x;
+    this.prevY = this.y;
+
+    const t = window.easeOutQuad(
+      window.clamp((window.now - this.lastUpdateTime) / window.INTERP_TIME, 0.0, 1.0)
+    );
+
+    const newPosX = t * (this.dstX - this.origX) + this.origX;
+    const newPosY = t * (this.dstY - this.origY) + this.origY;
+
+    this.updateCursor(newPosX, newPosY);
+  }
+
+  createCursor() {
+    if (this.id === window.myId) return;
+    this.create();
+  }
+
+  updateCursor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.element.style.marginLeft = `${x}px`;
+    this.element.style.marginTop = `${y}px`;
+  }
+
+  deleteCursor() {
+    this.delete();
+    window.cursors.delete(this.id);
+  }
+
+  updateNick(nick) {
+    this.nick = window.getPlayerName(nick);
+    if(this.bot) {
+      this.label.innerHTML = '<span style="color: #0bdfff;margin-right: 3px">[BOT]</span>' + this.nick;
+    } else {
+      this.label.innerText = this.nick;
+    }
+  }
+
+  updateColor(hue) {
+    this.hue = hue;
+    this.label.style.color = `hsl(${hue}, 100%, 50%)`;
+  }
+
+  updateNetwork(view, offset, isFull) {
+    let x = (view.getUint16(offset, true) / 65535) * window.innerWidth;
+    offset += 2;
+
+    let y = (view.getUint16(offset, true) / 65535) * window.innerHeight;
+    offset += 2;
+
+    if (isFull) {
+      let hue = view.getUint16(offset, true);
+      offset += 2;
+
+      let res = window.getString(view, offset);
+      offset = res.offset;
+
+      this.createCursor();
+      this.updateNick(res.nick);
+      this.updateColor(hue);
+      this.updateCursor(x, y);
+    }
+
+    this.origX = this.x;
+    this.origY = this.y;
+    this.dstX = x;
+    this.dstY = y;
+    this.lastUpdateTime = window.now;
+
+    return offset;
+  }
+
+  deleteNetwork(view, offset) {
+    this.deleteCursor();
+    return offset;
+  }
+};
+
+      function clamp(v, min, max) {
+  if (v < min) return min;
+  if (v > max) return max;
+  return v;
+}
+
+function easeOutQuad(t) {
+  return t * (2 - t);
+}
+
+function getPlayerName(nick) {
+  if(nick) return nick;
+  else return "Anonymous";
+}
+
+function easeInOutCubic(t) {
+  return t < 0.5
+    ? 4 * t * t * t
+    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function easeOutSine(t) {
+  return Math.sin((t * Math.PI) / 2);
+}
+
+
+function hideUI() {
+  $("#overlay").fadeOut(300);
+  $(".chat-container").fadeIn(300);
+}
+
+function fadeInUI() {
+  $(".chat-container").fadeOut(300);
+  $("#overlay").fadeIn(300);
+}
+
+function getString(view, offset) {
+  var nick = "";
+  for (;;) {
+    var v = view.getUint16(offset, true);
+    offset += 2;
+    if (v == 0) {
+      break;
+    }
+
+    nick += String.fromCharCode(v);
+  }
+  return {
+    nick: nick,
+    offset: offset,
+  };
+}
+
+function getLobbyName(view, offset) {
+  var nick = "";
+  for (;;) {
+    var v = view.getUint8(offset, true);
+    offset += 1;
+    if (v == 0) {
+      break;
+    }
+
+    nick += String.fromCharCode(v);
+  }
+  return {
+    nick: nick,
+    offset: offset,
+  };
+}
+
+      function leftGame() {
+  window.cursors.forEach((cursor, id) => {
+    cursor.delete();
+    cursors.delete(id);
+  });
+
+  window.fadeInUI();
+  window.isInGame = false;
+}
+
+window.Network = class Network {
+  constructor() {
+    this.webSocket = null;
+
+    this.address = window.isSecure
+      ? "wss://192.168.1.12:9091"
+      : "ws://192.168.1.12:8081";
+    this.hasConnection = false;
+    this.sentHello = false;
+    this.lastPing = 0;
+
+    // Client -> Server
+    this.OPCODE_PING = 0x00;
+    this.OPCODE_HI = 0x01;
+    this.OPCODE_HI_BOT = 0x02;
+    this.OPCODE_ENTER_GAME = 0x03;
+    this.OPCODE_LEAVE_GAME = 0x04;
+    this.OPCODE_RESIZE = 0x05;
+    this.OPCODE_CURSOR = 0x06;
+    this.OPCODE_CD = 0x07;
+    this.OPCODE_LS = 0x08;
+    this.OPCODE_CHAT = 0x09;
+    this.OPCODE_LS_MESSAGES = 0x10;
+
+    // Server -> Client
+    this.OPCODE_PONG = 0x00;
+    this.OPCODE_ENTERED_GAME = 0xa0;
+    this.OPCODE_CYCLE_S = 0xa4;
+    this.OPCODE_EVENTS = 0xa1;
+    this.OPCODE_HISTORY = 0xb1;
+    this.OPCODE_CONFIG = 0xb2;
+  }
+
+  getServerAndConnect() {
+    let url = new URL(location.href);
+    let id = url.searchParams.get("id");
+
+    if (id) {
+      this.address = `${this.address}/?id=${id}`;
+    }
+
+    this.connect();
+  }
+
+  connect() {
+    try {
+      this.webSocket = new WebSocket(this.address);
+    } catch (e) {
+      setTimeout(() => this.connect(), 1e3);
+      console.log(e);
+      return;
+    }
+    this.webSocket.binaryType = "arraybuffer";
+    this.webSocket.onopen = this.onSocketOpen;
+    this.webSocket.onclose = this.onSocketClose;
+    this.webSocket.onerror = this.onError;
+    this.webSocket.onmessage = this.onSocketMessage;
+  }
+
+  onSocketOpen() {
+    console.log("Connected!");
+    window.network.hasConnection = true;
+    window.network.hello();
+  }
+
+  onSocketClose() {
+    console.log("disconnected");
+    window.network.hasConnection = false;
+    setTimeout(() => window.network.connect(), 1e3);
+    leftGame();
+  }
+
+  onError(a) {
+    console.error(a);
+  }
+
+  onSocketMessage(event) {
+    window.network.processMessage(event.data);
+  }
+
+  hello() {
+    this.ping();
+    this.sendHello();
+  }
+
+  processEvents(view) {
+    let offset = 1;
+    let type = view.getUint8(offset++);
+    switch (type) {
+      case 0x1: {
+        let id = view.getUint16(offset, true);
+        offset += 2;
+        let res = window.getString(view, offset);
+        let nick = res.nick;
+        offset = res.offset;
+        let res0 = window.getString(view, offset);
+        let message = res0.nick;
+        offset = res0.offset;
+        let color = window.cursors.get(id)?.hue || 240;
+        if(id == window.myId) color = myHue;
+        window.chatbox.addMessage(nick, color, message);
+        break;
+      }
+
+      default:
+        break;
+    }
+  }
+
+  processConfig(view) {
+    let offset = 1,
+      byteLength = view.byteLength;
+    while (offset != byteLength) {
+      let res = window.getLobbyName(view, offset);
+      let name = res.nick;
+      offset = res.offset;
+      console.log("lobby: " + name);
+    }
+  }
+
+  processHistory(view) {
+    let offset = 1,
+      byteLength = view.byteLength;
+    while (offset != byteLength) {
+      let id = view.getUint16(offset, true);
+      offset += 2;
+      let hue = view.getUint16(offset, true);
+      offset += 2;
+      let timestamp = view.getFloat64(offset, true);
+      offset += 8;
+      let res = window.getString(view, offset);
+      let nick = res.nick;
+      offset = res.offset;
+      res = window.getString(view, offset);
+      let content = res.nick;
+      offset = res.offset;
+      window.chatbox.addMessage(nick, hue, content);
+    }
+  }
+
+  processCursors(view) {
+    let offset = 1;
+    while (true) {
+      let id = view.getUint16(offset, true);
+      offset += 2;
+      if (id == 0x00) break;
+      let flags = view.getUint8(offset, true);
+      offset++;
+      switch (flags) {
+        case 0x0: { // appear
+          let cursor = new window.Cursor();
+          cursor.id = id;
+          offset = cursor.updateNetwork(view, offset, true);
+          window.cursors.set(id, cursor);
+          break;
+        }
+
+        case 0x1: { // update
+          let cursor = window.cursors.get(id);
+          if (cursor) {
+            offset = cursor.updateNetwork(view, offset, false);
+          } else {
+            console.log("cursor with id: " + id + " not found");
+          }
+          break;
+        }
+
+        case 0x2: { // delete
+          let cursor = window.cursors.get(id);
+          if (cursor) {
+            offset = cursor.deleteNetwork(view, offset);
+          } else {
+            console.log("unknown cursor: " + id + " can't delete it");
+          }
+          break;
+        }
+
+        case 0x3: {
+          let cursor = new window.Cursor(true);
+          cursor.id = id;
+          offset = cursor.updateNetwork(view, offset, true);
+          window.cursors.set(id, cursor);
+          break;
+        }
+
+        default:
+          console.log("unknown flags", flags);
+      }
+    }
+  }
+
+  processMessage(buffer) {
+    let view = new DataView(buffer);
+    let op = view.getUint8(0);
+    switch (op) {
+      case this.OPCODE_PONG:
+        console.log("Pong", +new Date() - this.lastPing);
+        break;
+      case this.OPCODE_ENTERED_GAME:
+        window.isInGame = true;
+        window.myId = view.getUint16(1, true);
+        console.log("my id:", window.myId);
+        window.myHue = view.getUint16(3, true);
+        console.log("my hue", window.myHue);
+        window.hideUI();
+        this.list();
+        this.getHistory();
+        break;
+      case this.OPCODE_CYCLE_S:
+        this.processCursors(view, op);
+        break;
+      case this.OPCODE_EVENTS:
+        this.processEvents(view);
+        break;
+      case this.OPCODE_HISTORY:
+        this.processHistory(view);
+        break;
+      case this.OPCODE_CONFIG:
+        this.processConfig(view);
+        break;
+      default:
+        console.log("unknown op:", op);
+        break;
+    }
+  }
+
+  ping() {
+    let buffer = new ArrayBuffer(1);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_PING);
+
+    this.webSocket.send(buffer);
+    this.lastPing = +new Date();
+  }
+
+  sendHello() {
+    let buffer = new ArrayBuffer(5);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_HI_BOT);
+
+    view.setUint16(1, window.innerWidth, true);
+    view.setUint16(3, window.innerHeight, true);
+
+    this.webSocket.send(buffer);
+  }
+
+  sendResize() {
+    let buffer = new ArrayBuffer(5);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_RESIZE);
+
+    view.setUint16(1, window.innerWidth, true);
+    view.setUint16(3, window.innerHeight, true);
+
+    this.webSocket.send(buffer);
+  }
+
+  sendCursor(x, y) {
+    let buffer = new ArrayBuffer(5);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_CURSOR);
+
+    view.setUint16(1, x, true);
+    view.setUint16(3, y, true);
+
+    this.webSocket.send(buffer);
+  }
+
+  sendNick(nick) {
+    let buffer = new ArrayBuffer(1 + 2 * nick.length + 3);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_ENTER_GAME);
+
+    for (let i = 0; i < nick.length; i++) {
+      view.setUint16(1 + i * 2, nick.charCodeAt(i), true);
+    }
+
+    this.webSocket.send(buffer);
+  }
+
+  leave() {
+    let buffer = new ArrayBuffer(1);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_LEAVE_GAME);
+
+    this.webSocket.send(buffer);
+
+    setTimeout(leftGame, 300);
+  }
+
+  sendChat(value) {
+    let buffer = new ArrayBuffer(1 + 2 * value.length + 3);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_CHAT);
+
+    for (let i = 0, l = value.length; i < l; i++) {
+      view.setUint16(1 + i * 2, value.charCodeAt(i), true);
+    }
+
+    this.webSocket.send(buffer);
+  }
+
+  changeRoom(value) {
+    let buffer = new ArrayBuffer(1 + value.length + 3);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_CD);
+
+    for (let i = 0, l = value.length; i < l; i++) {
+      view.setUint8(1 + i, value.charCodeAt(i));
+    }
+
+    this.webSocket.send(buffer);
+  }
+
+  list() {
+    let buffer = new ArrayBuffer(1);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_LS);
+
+    this.webSocket.send(buffer);
+  }
+
+  getHistory() {
+    let buffer = new ArrayBuffer(1);
+    let view = new DataView(buffer);
+
+    view.setUint8(0, this.OPCODE_LS_MESSAGES);
+
+    this.webSocket.send(buffer);
+  }
+}
+
+
+
+      
+      window.isSecure = window.location.protocol == "https:";
+window.href = window.location.href;
+window.url = new URL(window.href);
+
+window.debug = true;
+window.now = Date.now();
+window.UPDATE_EVERY_N_TICKS = 3;
+window.INTERP_TIME = (1000 / 30) * window.UPDATE_EVERY_N_TICKS;
+
+window.myId;
+window.myX = 0;
+window.myY = 0;
+window.isInGame;
+window.cursors = new Map();
+window.network;
+window.app;
+window.chatbox;
+
+function init() {
+  window.app = new window.App();
+  window.chatbox = new window.ChatBox();
+  window.network = new window.Network();
+  window.network.connect();
+  window.app.loop();
+  window.app.addListeners();
+
+  fadeInUI();
+  window.onresize = window.app.resize;
+}
+    
+window.onload = init;
+    </script>
+  </head>
+  <body>
+    <div id="cursor-place"></div>
+    <div class="chat-container">
+      <div id="chatbox">
+      </div>
+      <div id="chatInput">
+        <input
+          id="chat"
+          class="chat-input"
+          placeholder="type here.."
+          type="text"
+          maxlength="200"
+          onkeydown="if(event.keyCode == 13 && !event.shiftKey) window.app.sendMessage()"
+        />
+      </div>
+    </div>
+    <div id="overlay">
+      <div id="nickInput">
+        <input
+          id="nick"
+          class="input-nick"
+          maxlength="15"
+          placeholder="nickname"
+          type="text"
+          onkeydown="if(event.keyCode == 13) document.getElementById('playButton').click()"
+        />
+        <button
+          id="playButton"
+          onclick="window.app.clickPlay(document.getElementById('nick').value)"
+        >
+          PLAY
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
