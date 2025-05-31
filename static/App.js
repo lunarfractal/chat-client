@@ -57,7 +57,7 @@ window.App = class App {
       let value = input.value;
       if(value.startsWith('/')) {
         let command = value.substring(1);
-        if(command.startsWith('list') {
+        if(command.startsWith('list')) {
           this.listRooms();
         }
         else if(command.startsWith('help')) {
