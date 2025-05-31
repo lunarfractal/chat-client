@@ -7,7 +7,7 @@ window.App = class App {
     if (window.network.hasConnection) {
       window.network.sendNick(str);
       setTimeout(() => {
-        window.chatbox.addMessage('System', 120, 'Type /room <room_name> to change your room/create one if not exists');
+        window.chatbox.addMessage('System', 120, 'Type /help for help');
       }, 3000);
     }
   }
@@ -57,15 +57,15 @@ window.App = class App {
       let value = input.value;
       if(value.startsWith('/')) {
         let command = value.substring(1);
-        switch(command) {
-          case 'list':
-            this.listRooms();
-            break;
-          case 'room':
-            let roomId = value.split(' ')[1];
-            this.changeRoom(roomId);
-            break;
-          default: break;
+        if(command.startsWith('list') {
+          this.listRooms();
+        }
+        else if(command.startsWith('help')) {
+          window.chatbox.addMessage('System', 120, 'Commands: /list (list rooms), /room (change room)');
+        }
+        else if(command.startsWith('room')) {
+          let roomId = value.substring(5);
+          this.changeRoom(roomId);
         }
       } else {
         window.network.sendChat(value);
