@@ -39,6 +39,15 @@ window.App = class App {
     });
   }
 
+  listRooms() {
+    network.list();
+  }
+
+  changeRoom(id) {
+    window.chatbox.element.innerHTML = "";
+    network.changeRoom(id);
+  }
+
   sendMessage() {
     if(window.network.hasConnection && window.isInGame) {
       let input = document.getElementById('chat');
@@ -46,9 +55,12 @@ window.App = class App {
       if(value.startsWith('/')) {
         let command = value.substring(1);
         switch(command) {
+          case 'list':
+            this.listRooms();
+            break;
           case 'room':
             let roomId = value.split(' ')[1];
-            network.changeRoom(roomId);
+            this.changeRoom(roomId);
             break;
           default: break;
         }
