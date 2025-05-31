@@ -22,7 +22,7 @@ function init() {
   window.app = new window.App();
   window.chatbox = new window.ChatBox();
   window.network = new window.Network();
-  window.network.connect();
+  window.network.getServerAndConnect();
   window.app.loop();
   window.app.addListeners();
 
