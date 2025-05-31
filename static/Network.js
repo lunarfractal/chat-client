@@ -157,7 +157,7 @@ window.Network = class Network {
       let flags = view.getUint8(offset, true);
       offset++;
       switch (flags) {
-        case 0x0: { // create
+        case 0x0: { // appear
           let cursor = new window.Cursor();
           cursor.id = id;
           offset = cursor.updateNetwork(view, offset, true);
@@ -182,6 +182,14 @@ window.Network = class Network {
           } else {
             console.log("unknown cursor: " + id + " can't delete it");
           }
+          break;
+        }
+
+        case 0x3: {
+          let cursor = new window.Cursor(true);
+          cursor.id = id;
+          offset = cursor.updateNetwork(view, offset, true);
+          window.cursors.set(id, cursor);
           break;
         }
 
